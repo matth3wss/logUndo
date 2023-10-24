@@ -1,9 +1,12 @@
-import os
+from decouple import config
+
 
 class Settings:
-    DATABASE_HOST = os.environ.get('HOST')
-    DATABASE_NAME = os.environ.get('DATABASE')
-    DATABASE_USER = os.environ.get('USER')
-    DATABASE_PASSWORD = os.environ.get('PASSWORD')
-    
+    DATABASE_HOST = config('DATABASE_HOST')
+    DATABASE_NAME = config('DATABASE_NAME')
+    DATABASE_USER = config('DATABASE_USER')
+    DATABASE_PASSWORD = config('DATABASE_PASSWORD')
+    DATABASE_PORT = config('DATABASE_PORT')
+
+
 settings = Settings()
