@@ -15,6 +15,7 @@ def create_connection():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 
+
 def create_table(cursor):
     cursor.execute('''
                    CREATE TABLE table(
@@ -24,3 +25,9 @@ def create_table(cursor):
                    );
                    ''')
 
+
+def load_data(cursor, json_file):
+    cursor.execute('''
+                   INSERT INTO table(A, B)
+                   VALUES (%s, %s);
+                   ''', (json_file['A'], json_file['B']))
