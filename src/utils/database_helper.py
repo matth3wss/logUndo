@@ -11,23 +11,33 @@ def create_connection():
             password=settings.DATABASE_PASSWORD,
             port=settings.DATABASE_PORT
         )
+        conn.autocommit = True
         return conn
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
 
 
 def create_table(cursor):
-    cursor.execute('''
-                   CREATE TABLE table(
-                       id SERIAL PRIMARY KEY,
-                       A INTEGER NOT NULL,
-                       B INTEGER NOT NULL
-                   );
-                   ''')
+    cursor.execute('DROP TABLE IF EXISTS data;')
+    try:
+        cursor.execute('''
+                    CREATE TABLE data (
+                        id INTEGER NOT NULL,
+                        A INTEGER NOT NULL,
+                        B INTEGER NOT NULL
+                    );
+                    ''')
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
 
 
-def load_data(cursor, json_file):
-    cursor.execute('''
-                   INSERT INTO table(A, B)
-                   VALUES (%s, %s);
-                   ''', (json_file['A'], json_file['B']))
+def load_data(cursor, json_data):
+    ids = json_data['table']['id']
+    column_a = json_data['table']['A']
+    column_b = json_data['table']['B']
+
+    for i in range(len(ids)):
+        cursor.execute('''
+                       INSERT INTO data (id, A, B)
+                       VALUES (%s, %s, %s);
+                       ''', (ids[i], column_a[i], column_b[i]))
