@@ -33,7 +33,6 @@ def create_table(con, json_data):
         con.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
-    return columns
 
 
 def load_data(con, json_data):
