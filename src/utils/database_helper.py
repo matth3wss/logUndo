@@ -35,3 +35,29 @@ def create_table(con, json_data):
         print(error)
     return columns
 
+
+def load_data(con, json_data):
+    cursor = con.cursor()
+
+    table_name = extract_table_name(json_data)
+    columns = extract_keys(json_data)
+    values = extract_values(json_data)
+
+    rows = len(values[0])
+    tuple_values = []
+
+    for i in range(rows):
+        tuple_row = '(' + ', '.join([str(values[j][i])
+                                     for j in range(len(columns))]) + ')'
+        tuple_values.append(tuple_row)
+
+    # Convert the column names to a comma-separated string
+    column_names_str = ', '.join(columns)
+
+    # Construct the INSERT statement with dynamic column names
+    sql = f'INSERT INTO {table_name} ({column_names_str}) VALUES {", ".join(tuple_values)};'
+
+    try:
+        cursor.execute(sql)
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
